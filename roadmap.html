@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Compound Growth Projection - Terminal Alpha</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#363941",
+                      "on-secondary": "#003824",
+                      "outline": "#8c909f",
+                      "tertiary-fixed": "#ffdadb",
+                      "primary-fixed-dim": "#adc6ff",
+                      "error-container": "#93000a",
+                      "surface-container-highest": "#32353c",
+                      "surface-container-high": "#272a31",
+                      "surface-tint": "#adc6ff",
+                      "on-secondary-fixed": "#002113",
+                      "tertiary-fixed-dim": "#ffb2b7",
+                      "error": "#ffb4ab",
+                      "surface-variant": "#32353c",
+                      "secondary-fixed": "#6ffbbe",
+                      "on-tertiary-container": "#5b0017",
+                      "tertiary": "#ffb2b7",
+                      "on-surface-variant": "#c2c6d6",
+                      "secondary-fixed-dim": "#4edea3",
+                      "on-surface": "#e1e2ec",
+                      "secondary": "#4edea3",
+                      "on-error-container": "#ffdad6",
+                      "primary-container": "#4d8eff",
+                      "primary-fixed": "#d8e2ff",
+                      "tertiary-container": "#ff516a",
+                      "on-background": "#e1e2ec",
+                      "on-secondary-container": "#00311f",
+                      "on-primary-fixed-variant": "#004395",
+                      "surface": "#10131a",
+                      "surface-container-low": "#191b23",
+                      "inverse-surface": "#e1e2ec",
+                      "outline-variant": "#424754",
+                      "background": "#10131a",
+                      "surface-container-lowest": "#0b0e15",
+                      "surface-container": "#1d2027",
+                      "on-secondary-fixed-variant": "#005236",
+                      "on-tertiary": "#67001b",
+                      "on-tertiary-fixed-variant": "#92002a",
+                      "on-error": "#690005",
+                      "secondary-container": "#00a572",
+                      "on-primary": "#002e6a",
+                      "inverse-primary": "#005ac2",
+                      "inverse-on-surface": "#2e3038",
+                      "on-primary-fixed": "#001a42",
+                      "on-tertiary-fixed": "#40000d",
+                      "primary": "#adc6ff",
+                      "surface-dim": "#10131a",
+                      "on-primary-container": "#00285d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "40px",
+                      "gutter": "24px",
+                      "margin-mobile": "16px",
+                      "container-max-width": "1440px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Inter", "sans-serif"
+                      ],
+                      "body-md": [
+                              "Inter", "sans-serif"
+                      ],
+                      "label-md": [
+                              "Inter", "sans-serif"
+                      ],
+                      "display-lg": [
+                              "Inter", "sans-serif"
+                      ],
+                      "body-lg": [
+                              "Inter", "sans-serif"
+                      ],
+                      "label-sm": [
+                              "Inter", "sans-serif"
+                      ],
+                      "headline-md": [
+                              "Inter", "sans-serif"
+                      ],
+                      "headline-lg": [
+                              "Inter", "sans-serif"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.04em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #10131a;
+            color: #e1e2ec;
+        }
+
+        /* Glass Panel Base */
+        .glass-panel {
+            background-color: rgba(29, 32, 39, 0.4); /* surface-container */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid;
+            border-image-source: linear-gradient(to bottom right, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
+            border-image-slice: 1;
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Input Overrides */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #adc6ff; /* primary */
+            cursor: pointer;
+            margin-top: -6px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+            box-shadow: 0 0 10px rgba(173, 198, 255, 0.5);
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #32353c; /* surface-variant */
+            border-radius: 2px;
+        }
+
+        /* Glowing Dot */
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #4edea3; /* secondary */
+            box-shadow: 0 0 8px #4edea3;
+        }
+        
+        .status-dot-primary {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #adc6ff;
+            box-shadow: 0 0 8px #adc6ff;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased overflow-hidden flex h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-full py-6 bg-surface-container dark:bg-surface-container border-r border-white/10 backdrop-blur-lg shadow-2xl h-screen w-64 flex-shrink-0 z-50 transition-all duration-300">
+<!-- Brand / Header -->
+<div class="px-6 mb-8 flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center shrink-0 border border-primary/20">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-primary dark:text-primary leading-none mb-1">ProTrader Terminal</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Institutional Grade</p>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex-1 flex flex-col gap-1 px-3 mt-4">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/sizer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">calculate</span>
+<span class="font-label-md text-label-md">Position Sizer</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">import_contacts</span>
+<span class="font-label-md text-label-md">Trade Journal</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary/5 hover:bg-white/5 transition-colors duration-200 active:scale-[0.98] transition-transform" href="/roadmap">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">show_chart</span>
+<span class="font-label-md text-label-md">Growth Roadmap</span>
+</a>
+</nav>
+<!-- CTA -->
+<div class="px-6 mt-auto mb-6">
+<button onclick="window.location.href='/journal?new=true'" class="w-full bg-primary text-on-primary font-label-md text-label-md font-bold py-3 rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] hover:brightness-110 transition-all active:scale-[0.98]">
+                New Trade
+            </button>
+</div>
+<!-- Footer Navigation -->
+<div class="flex flex-col gap-1 px-3 border-t border-white/5 pt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">help_outline</span>
+<span class="font-label-sm text-label-sm">Support</span>
+</a>
+</div>
+<!-- User Avatar / Footer -->
+<div class="px-6 mt-6 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/10 shrink-0">
+<img alt="Professional Trader Profile" class="w-full h-full object-cover" data-alt="A macro photograph of a sophisticated digital interface avatar icon glowing with neon blue and silver hues, set against a dark institutional background. High contrast, sharp focus, 8k resolution, photorealistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDROkyRwnjV72CE2d8VNEHb9kbKKwxNsvBfB_C4XkoLevw2wtvp36AEOIekFi4hB42noOibmd09m0RAlg5Ko0XaheGgd002BpODs4HL3dihmRwGyScz5vhxzEbBmRzxB2rqNeSlwS9xijYzrrHt5AE69WyTXizeqhHt_zd5GIgbFsyZm6UYTxkc4ZytIskAp2fS0o2JmjBqO_lBomyxeBop0itTlNbqgTabmUw3g9iPDX0t5EWQNnaBqhWRe0tNPp1bEfOzFqwG6anh"/>
+</div>
+<div class="flex-1 truncate">
+<p class="font-label-sm text-label-sm text-on-surface font-medium truncate">Alex_Quant</p>
+<div class="flex items-center gap-1.5 mt-0.5">
+<div class="status-dot"></div>
+<p class="font-label-sm text-label-sm text-secondary text-[10px] uppercase">Online</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-margin-desktop h-16 w-full z-40 border-b border-white/10 bg-surface-container-low dark:bg-surface-container-low shadow-sm shrink-0">
+<!-- Mobile Brand -->
+<div class="md:hidden flex items-center gap-2">
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-black text-primary dark:text-primary">Terminal Alpha</span>
+</div>
+<!-- Search (Left aligned as per JSON, but leaving space for brand on mobile) -->
+<div class="hidden md:flex flex-1 max-w-md relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-[#050505] border border-white/10 text-on-surface placeholder:text-on-surface-variant/50 text-label-md font-label-md rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all shadow-inner" placeholder="Search ticker, symbol, or command... (⌘K)" type="text"/>
+</div>
+<!-- Center Navigation (Hidden on mobile) -->
+<nav class="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="#">Markets</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="#">Risk Panel</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="#">History</a>
+</nav>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4 ml-auto">
+<!-- Icon Actions -->
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full shadow-[0_0_4px_#adc6ff]"></span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+</div>
+<!-- Primary Action -->
+<button class="hidden md:flex bg-transparent border border-white/20 text-secondary font-label-md text-label-md px-4 py-1.5 rounded-lg hover:bg-white/5 hover:border-secondary/50 transition-all active:scale-[0.98]">
+                    Connect Broker
+                </button>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface-variant p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+<div class="max-w-container-max-width mx-auto flex flex-col gap-6">
+<!-- Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface">Growth Projection</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-1">Simulate compounding scenarios and funding milestones.</p>
+</div>
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-full border border-white/5 shadow-sm">
+<div class="status-dot"></div>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-widest">Live Calc</span>
+</div>
+</div>
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: Controls (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Input Panel -->
+<div class="glass-panel rounded-xl p-6 flex flex-col gap-6">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">tune</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Parameters</h3>
+</div>
+<!-- Starting Balance -->
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface-variant">Starting Capital</label>
+<span class="font-label-md text-label-md text-primary font-bold" id="label-capital">$10,000</span>
+</div>
+<div class="relative bg-[#050505] border border-white/10 rounded-lg p-3 flex items-center focus-within:border-primary transition-colors">
+<span class="text-on-surface-variant font-label-md text-label-md mr-2">$</span>
+<input id="input-capital" oninput="syncCapitalInput(this.value)" class="bg-transparent border-none w-full text-on-surface font-label-md text-label-md focus:ring-0 p-0" type="number" value="10000"/>
+</div>
+<input id="slider-capital" oninput="syncCapitalSlider(this.value)" class="mt-2 w-full accent-primary" max="100000" min="100" step="100" type="range" value="10000"/>
+</div>
+<!-- Monthly Target -->
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface-variant">Monthly Target</label>
+<span class="font-label-md text-label-md text-secondary font-bold" id="label-target">5.0%</span>
+</div>
+<div class="relative bg-[#050505] border border-white/10 rounded-lg p-3 flex items-center focus-within:border-secondary transition-colors">
+<input id="input-target" oninput="syncTargetInput(this.value)" class="bg-transparent border-none w-full text-on-surface font-label-md text-label-md focus:ring-0 p-0 text-right mr-2" step="0.5" type="number" value="5.0"/>
+<span class="text-on-surface-variant font-label-md text-label-md">%</span>
+</div>
+<input id="slider-target" oninput="syncTargetSlider(this.value)" class="mt-2 w-full accent-secondary" max="30" min="1" step="0.5" type="range" value="5"/>
+</div>
+<!-- Duration -->
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface-variant">Duration</label>
+<span class="font-label-md text-label-md text-on-surface font-bold" id="label-duration">36 Months</span>
+</div>
+<div class="flex gap-2" id="duration-buttons">
+<button onclick="setDuration(12, this)" class="flex-1 bg-[#050505] border border-white/10 py-2 rounded-lg font-label-sm text-label-sm text-on-surface hover:border-primary transition-colors dur-btn">12m</button>
+<button onclick="setDuration(24, this)" class="flex-1 bg-[#050505] border border-white/10 py-2 rounded-lg font-label-sm text-label-sm text-on-surface hover:border-primary transition-colors dur-btn">24m</button>
+<button onclick="setDuration(36, this)" class="flex-1 bg-primary/10 border border-primary text-primary py-2 rounded-lg font-label-sm text-label-sm font-bold shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] dur-btn">36m</button>
+</div>
+</div>
+</div>
+<!-- Summary Card -->
+<div class="glass-panel rounded-xl p-6 relative overflow-hidden group">
+<!-- Subtle glow background -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 blur-3xl rounded-full pointer-events-none group-hover:bg-primary/30 transition-colors duration-700"></div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Projected Balance</p>
+<h3 class="font-display-lg text-display-lg text-on-surface font-bold tracking-tight mb-4" id="projected-balance">$0.00</h3>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[16px]">trending_up</span>
+<span class="font-label-md text-label-md text-secondary" id="projected-return">+0.0% Total Return</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Chart & Tables (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Chart Area -->
+<div class="glass-panel rounded-xl p-6 flex flex-col h-[400px]">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Compounding Curve</h3>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_#adc6ff]"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Capital</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full border border-white/20 border-dashed"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Milestone</span>
+</div>
+</div>
+</div>
+<!-- Placeholder for actual chart rendering -->
+<div class="flex-1 relative w-full h-full border-b border-l border-white/10 flex items-end">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+<div class="w-full h-[1px] bg-white/5"></div>
+</div>
+<!-- Fake Area Chart (SVG) -->
+<svg id="svg-compounding-chart" class="w-full h-full preserve-3d cursor-crosshair" preserveaspectratio="none" viewbox="0 0 100 100">
+<defs>
+<lineargradient id="areaGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#adc6ff" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#adc6ff" stop-opacity="0.0"></stop>
+</lineargradient>
+<filter height="140%" id="glow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="2"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
+</defs>
+<path id="compounding-chart-area" d="M0,100 L0,100 L100,100 L100,100 Z" fill="url(#areaGradient)"></path>
+<path id="compounding-chart-line" d="M0,100 H100" fill="none" filter="url(#glow)" stroke="#adc6ff" stroke-width="0.5"></path>
+</svg>
+<!-- Tooltip Overlay -->
+<div id="chart-tooltip-container" class="absolute transform -translate-x-1/2 -translate-y-full mb-2 bg-[#050505]/90 border border-white/10 rounded p-2 backdrop-blur-md z-10 shadow-lg flex flex-col items-center" style="display: none;">
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="chart-tooltip-month">Month 14</span>
+<span class="font-label-md text-label-md text-primary font-bold" id="chart-tooltip-value">$19,799</span>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#050505] border-b border-r border-white/10 transform rotate-45"></div>
+</div>
+<div id="chart-tracker-line" class="absolute w-[1px] bg-white/20 border-l border-dashed border-white/20 pointer-events-none" style="display: none; height: 100%;"></div>
+<div id="chart-tracker-dot" class="absolute w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#adc6ff] pointer-events-none" style="display: none;"></div>
+</div>
+<div class="flex justify-between items-center mt-2 px-1" id="chart-x-labels">
+    <!-- Dynamic X-axis labels go here -->
+</div>
+</div>
+<!-- Data Row: Milestones & Income Roadmap -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Milestones -->
+<div class="glass-panel rounded-xl p-6">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">Funding Milestones</h3>
+<div class="flex flex-col gap-4 relative" id="milestones-list">
+    <!-- Dynamic Milestones go here -->
+</div>
+</div>
+<!-- Income Roadmap (KES vs USD) -->
+<div class="glass-panel rounded-xl p-0 overflow-hidden flex flex-col">
+<div class="p-6 pb-4 border-b border-white/5 flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Income Projection</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-white/5 px-2 py-1 rounded">@ 5% Target</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-variant/20">
+<th class="font-label-sm text-label-sm text-on-surface-variant font-medium py-3 px-6 border-b border-white/5">Acct Size</th>
+<th class="font-label-sm text-label-sm text-on-surface-variant font-medium py-3 px-6 border-b border-white/5 text-right">USD (Monthly)</th>
+<th class="font-label-sm text-label-sm text-on-surface-variant font-medium py-3 px-6 border-b border-white/5 text-right">KES (Approx)</th>
+</tr>
+</thead>
+<tbody id="income-projection-tbody" class="font-label-md text-label-md divide-y divide-white/5">
+    <!-- Dynamic income rows go here -->
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+let currentDurationMonths = 36;
+let balanceCurve = [];
+
+function setDuration(months, btn) {
+    currentDurationMonths = months;
+    
+    // Update active class on buttons
+    const container = document.getElementById('duration-buttons');
+    container.querySelectorAll('.dur-btn').forEach(b => {
+        b.className = "flex-1 bg-[#050505] border border-white/10 py-2 rounded-lg font-label-sm text-label-sm text-on-surface hover:border-primary transition-colors dur-btn";
+    });
+    btn.className = "flex-1 bg-primary/10 border border-primary text-primary py-2 rounded-lg font-label-sm text-label-sm font-bold shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] dur-btn";
+    
+    document.getElementById('label-duration').innerText = `${months} Months`;
+    
+    runProjections();
+}
+
+function syncCapitalInput(val) {
+    const num = parseFloat(val) || 0;
+    document.getElementById('slider-capital').value = num;
+    document.getElementById('label-capital').innerText = `$${num.toLocaleString()}`;
+    runProjections();
+}
+
+function syncCapitalSlider(val) {
+    const num = parseFloat(val);
+    document.getElementById('input-capital').value = num;
+    document.getElementById('label-capital').innerText = `$${num.toLocaleString()}`;
+    runProjections();
+}
+
+function syncTargetInput(val) {
+    const num = parseFloat(val) || 0;
+    document.getElementById('slider-target').value = num;
+    document.getElementById('label-target').innerText = `${num.toFixed(1)}%`;
+    runProjections();
+}
+
+function syncTargetSlider(val) {
+    const num = parseFloat(val);
+    document.getElementById('input-target').value = num;
+    document.getElementById('label-target').innerText = `${num.toFixed(1)}%`;
+    runProjections();
+}
+
+async function runProjections() {
+    const capital = parseFloat(document.getElementById('input-capital').value) || 0;
+    const target = parseFloat(document.getElementById('input-target').value) || 0;
+    
+    if (capital <= 0 || target <= 0) return;
+    
+    try {
+        const response = await fetch('/api/project', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                balance: capital,
+                rate: target,
+                months: currentDurationMonths
+            })
+        });
+        
+        const data = await response.json();
+        
+        balanceCurve = data.balance_curve || [];
+        const finalBalance = data.final_balance || 0;
+        
+        // 1. Projected Balance Summary Card
+        document.getElementById('projected-balance').innerHTML = `$${finalBalance.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+        const returnPct = ((finalBalance - capital) / capital * 100);
+        document.getElementById('projected-return').innerText = `+${returnPct.toFixed(1)}% Total Return`;
+        
+        // 2. Compounding Curve SVG Chart
+        const line = document.getElementById('compounding-chart-line');
+        const area = document.getElementById('compounding-chart-area');
+        if (line && area) {
+            const paths = generateSvgPaths(balanceCurve);
+            line.setAttribute('d', paths.line);
+            area.setAttribute('d', paths.area);
+        }
+        
+        // 3. Render X-Axis labels based on duration
+        const xContainer = document.getElementById('chart-x-labels');
+        if (xContainer) {
+            xContainer.innerHTML = '';
+            const step = Math.floor(currentDurationMonths / 4);
+            for (let i = 0; i <= currentDurationMonths; i += step) {
+                const span = document.createElement('span');
+                span.className = "font-label-sm text-label-sm text-on-surface-variant/50";
+                span.innerText = `M${i}`;
+                xContainer.appendChild(span);
+            }
+        }
+        
+        // 4. Update milestones checklist
+        updateMilestones(data.milestones);
+        
+    } catch (e) {
+        console.error("Projections computation failed:", e);
+    }
+}
+
+function generateSvgPaths(points) {
+    if (points.length <= 1) {
+        return { line: "M 0 50 H 100", area: "M 0 50 H 100 V 100 H 0 Z" };
+    }
+    
+    let min = Math.min(...points);
+    let max = Math.max(...points);
+    let range = max - min;
+    if (range === 0) range = 1;
+    
+    let pathPoints = [];
+    for (let i = 0; i < points.length; i++) {
+        let x = (i / (points.length - 1)) * 100;
+        // Invert Y mapping (Y=0 is top, Y=100 is bottom)
+        let y = 95 - ((points[i] - min) / range) * 90; // keep padding margins
+        pathPoints.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+    }
+    
+    let linePath = "M " + pathPoints.join(" L ");
+    let areaPath = `${linePath} L 100,100 L 0,100 Z`;
+    return { line: linePath, area: areaPath };
+}
+
+function updateMilestones(milestones) {
+    const listContainer = document.getElementById('milestones-list');
+    if (!listContainer) return;
+    
+    listContainer.innerHTML = `
+        <div class="absolute left-[11px] top-4 bottom-4 w-[1px] bg-white/10"></div>
+    `;
+    
+    Object.keys(milestones).forEach(name => {
+        const month = milestones[name];
+        const hit = month !== null;
+        
+        const item = document.createElement('div');
+        item.className = `flex items-start gap-4 relative z-10 ${!hit ? 'opacity-40' : ''}`;
+        
+        const checkbox = hit 
+            ? `<div class="w-6 h-6 rounded-full bg-primary/20 border border-primary flex items-center justify-center shrink-0 mt-0.5 shadow-[0_0_12px_rgba(173,198,255,0.3)]">
+                 <div class="w-2 h-2 rounded-full bg-primary"></div>
+               </div>`
+            : `<div class="w-6 h-6 rounded-full bg-surface border border-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                 <div class="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+               </div>`;
+               
+        item.innerHTML = `
+            ${checkbox}
+            <div>
+                <p class="font-label-md text-label-md ${hit ? 'text-primary font-bold' : 'text-on-surface'}">${name}</p>
+                <p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">
+                    ${hit ? `Projected: <span class="text-on-surface font-medium">Month ${month}</span>` : 'Beyond target window'}
+                </p>
+            </div>
+        `;
+        listContainer.appendChild(item);
+    });
+}
+
+async function loadFundedProjections() {
+    try {
+        const response = await fetch('/api/projections');
+        const data = await response.json();
+        
+        const tbody = document.getElementById('income-projection-tbody');
+        if (tbody) {
+            tbody.innerHTML = '';
+            data.projections.forEach(proj => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-white/5 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-3 px-6 text-on-surface">${proj.label}</td>
+                    <td class="py-3 px-6 text-right text-primary">$${proj.net_monthly.toLocaleString()}/mo</td>
+                    <td class="py-3 px-6 text-right text-on-surface-variant">KES ${proj.kes_monthly.toLocaleString()}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    } catch (e) {
+        console.error("Failed to load funded projections:", e);
+    }
+}
+
+// Chart Interaction (Tooltip hover)
+const svg = document.getElementById('svg-compounding-chart');
+if (svg) {
+    const tooltip = document.getElementById('chart-tooltip-container');
+    const trackerLine = document.getElementById('chart-tracker-line');
+    const trackerDot = document.getElementById('chart-tracker-dot');
+    
+    svg.addEventListener('mousemove', (e) => {
+        if (balanceCurve.length <= 1) return;
+        
+        const rect = svg.getBoundingClientRect();
+        const clientX = e.clientX - rect.left;
+        const pctX = clientX / rect.width;
+        
+        // Find closest month index
+        const monthIndex = Math.min(Math.max(0, Math.round(pctX * currentDurationMonths)), currentDurationMonths);
+        const value = balanceCurve[monthIndex];
+        
+        if (value === undefined) return;
+        
+        // Scale elements positioning
+        const xPos = (monthIndex / currentDurationMonths) * rect.width;
+        
+        let minVal = Math.min(...balanceCurve);
+        let maxVal = Math.max(...balanceCurve);
+        let range = maxVal - minVal;
+        if (range === 0) range = 1;
+        
+        // Invert Y mapping for screen positioning (Y=0 is top, Y=rect.height is bottom)
+        const pctY = 0.95 - ((value - minVal) / range) * 0.90;
+        const yPos = pctY * rect.height;
+        
+        // Update positions & contents
+        tooltip.style.display = 'flex';
+        tooltip.style.left = `${rect.left + xPos}px`;
+        tooltip.style.top = `${rect.top + yPos}px`;
+        
+        document.getElementById('chart-tooltip-month').innerText = `Month ${monthIndex}`;
+        document.getElementById('chart-tooltip-value').innerText = `$${value.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+        
+        trackerLine.style.display = 'block';
+        trackerLine.style.left = `${rect.left + xPos}px`;
+        trackerLine.style.top = `${rect.top}px`;
+        trackerLine.style.height = `${rect.height}px`;
+        
+        trackerDot.style.display = 'block';
+        trackerDot.style.left = `${rect.left + xPos - 4}px`; // center dot (4px radius)
+        trackerDot.style.top = `${rect.top + yPos - 4}px`;
+    });
+    
+    svg.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+        trackerLine.style.display = 'none';
+        trackerDot.style.display = 'none';
+    });
+}
+
+// Run on page mount
+window.addEventListener('DOMContentLoaded', async () => {
+    // Set slider range based on capital default
+    document.getElementById('input-capital').value = 70;
+    syncCapitalInput(70);
+    document.getElementById('input-target').value = 15;
+    syncTargetInput(15);
+    
+    await loadFundedProjections();
+    await runProjections();
+});
+</script>
+
+</body></html>

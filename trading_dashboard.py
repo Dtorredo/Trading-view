@@ -7,10 +7,148 @@ and financial modelling — all applied directly to your trading system.
 Run: python trading_dashboard.py
 """
 
-import numpy as np
 import json
 import os
 from datetime import datetime
+import math
+
+try:
+    import numpy as np
+except ImportError:
+    # NumPy is not installed (common in offline or proxy-restricted environments).
+    # We fallback to a pure Python mockup of the same NumPy APIs used in this dashboard
+    # to guarantee it runs out-of-the-box without requiring installation.
+    class NDArrayMock:
+        def __init__(self, data):
+            self.data = list(data)
+        def __len__(self):
+            return len(self.data)
+        def __getitem__(self, index):
+            if isinstance(index, NDArrayMock):
+                return NDArrayMock([self.data[i] for i, val in enumerate(index.data) if val])
+            elif isinstance(index, slice):
+                return NDArrayMock(self.data[index])
+            else:
+                return self.data[index]
+        def tolist(self):
+            return self.data
+        def astype(self, dtype):
+            if dtype == int:
+                return NDArrayMock([int(x) for x in self.data])
+            return self
+        def __add__(self, other):
+            if isinstance(other, NDArrayMock):
+                return NDArrayMock([a + b for a, b in zip(self.data, other.data)])
+            return NDArrayMock([x + other for x in self.data])
+        def __radd__(self, other):
+            return self.__add__(other)
+        def __sub__(self, other):
+            if isinstance(other, NDArrayMock):
+                return NDArrayMock([a - b for a, b in zip(self.data, other.data)])
+            return NDArrayMock([x - other for x in self.data])
+        def __mul__(self, other):
+            if isinstance(other, NDArrayMock):
+                return NDArrayMock([a * b for a, b in zip(self.data, other.data)])
+            return NDArrayMock([x * other for x in self.data])
+        def __rmul__(self, other):
+            return self.__mul__(other)
+        def __truediv__(self, other):
+            if isinstance(other, NDArrayMock):
+                return NDArrayMock([a / b for a, b in zip(self.data, other.data)])
+            return NDArrayMock([x / other for x in self.data])
+        def __floordiv__(self, other):
+            if isinstance(other, NDArrayMock):
+                return NDArrayMock([a // b for a, b in zip(self.data, other.data)])
+            return NDArrayMock([x // other for x in self.data])
+        def __gt__(self, other):
+            if isinstance(other, NDArrayMock):
+                return NDArrayMock([a > b for a, b in zip(self.data, other.data)])
+            return NDArrayMock([x > other for x in self.data])
+        def __lt__(self, other):
+            if isinstance(other, NDArrayMock):
+                return NDArrayMock([a < b for a, b in zip(self.data, other.data)])
+            return NDArrayMock([x < other for x in self.data])
+        def __eq__(self, other):
+            if isinstance(other, NDArrayMock):
+                return NDArrayMock([a == b for a, b in zip(self.data, other.data)])
+            return NDArrayMock([x == other for x in self.data])
+        def __repr__(self):
+            return f"array({self.data})"
+
+    class NumPyMock:
+        def array(self, data):
+            return NDArrayMock(data)
+        def round(self, data, decimals=0):
+            if isinstance(data, NDArrayMock):
+                return NDArrayMock([round(x, decimals) for x in data.data])
+            elif isinstance(data, list):
+                return [round(x, decimals) for x in data]
+            return round(data, decimals)
+        def sum(self, data):
+            if isinstance(data, NDArrayMock):
+                return sum(data.data)
+            return sum(data)
+        def mean(self, data):
+            d = data.data if isinstance(data, NDArrayMock) else list(data)
+            return sum(d) / len(d) if len(d) > 0 else 0.0
+        def max(self, data):
+            d = data.data if isinstance(data, NDArrayMock) else list(data)
+            return max(d) if len(d) > 0 else 0.0
+        def min(self, data):
+            d = data.data if isinstance(data, NDArrayMock) else list(data)
+            return min(d) if len(d) > 0 else 0.0
+        def where(self, condition, x, y):
+            cond_data = condition.data if isinstance(condition, NDArrayMock) else condition
+            res = []
+            for idx, val in enumerate(cond_data):
+                if val:
+                    res.append(x.data[idx] if isinstance(x, NDArrayMock) else x)
+                else:
+                    res.append(y.data[idx] if isinstance(y, NDArrayMock) else y)
+            return NDArrayMock(res)
+        def cumsum(self, data):
+            d = data.data if isinstance(data, NDArrayMock) else list(data)
+            res = []
+            total = 0
+            for val in d:
+                total += val
+                res.append(total)
+            return NDArrayMock(res)
+        def std(self, data):
+            d = data.data if isinstance(data, NDArrayMock) else list(data)
+            if len(d) <= 1:
+                return 0.0
+            mean = sum(d) / len(d)
+            var = sum((val - mean) ** 2 for val in d) / len(d)
+            return math.sqrt(var)
+        def linspace(self, start, stop, num):
+            num = int(num)
+            if num <= 1:
+                return NDArrayMock([start])
+            step = (stop - start) / (num - 1)
+            return NDArrayMock([start + i * step for i in range(num)])
+        def power(self, x, y):
+            if isinstance(y, NDArrayMock):
+                return NDArrayMock([x ** val for val in y.data])
+            return x ** y
+        def diff(self, data):
+            d = data.data if isinstance(data, NDArrayMock) else list(data)
+            if len(d) <= 1:
+                return NDArrayMock([])
+            return NDArrayMock([d[i] - d[i-1] for i in range(1, len(d))])
+        class maximum:
+            @staticmethod
+            def accumulate(data):
+                d = data.data if isinstance(data, NDArrayMock) else list(data)
+                res = []
+                curr_max = -float('inf')
+                for val in d:
+                    if val > curr_max:
+                        curr_max = val
+                    res.append(curr_max)
+                return NDArrayMock(res)
+
+    np = NumPyMock()
 
 # ─────────────────────────────────────────────
 #  NUMPY CONCEPTS USED IN THIS FILE
@@ -133,7 +271,9 @@ def save_trades(trades: list):
         json.dump(trades, f, indent=2)
 
 def log_trade(result: str, pnl: float, pattern: str,
-              session: str, notes: str = ""):
+              session: str, notes: str = "", asset: str = "XAUUSD",
+              direction: str = "Long", entry: str = "N/A", exit: str = "N/A",
+              sl: str = "N/A", tp: str = "N/A"):
     """
     Log a trade to your journal.
     result: 'win' | 'loss' | 'be'
@@ -157,7 +297,13 @@ def log_trade(result: str, pnl: float, pattern: str,
         "pnl":     round(pnl, 2),
         "pattern": pattern,
         "session": session,
-        "notes":   notes
+        "notes":   notes,
+        "asset":   asset,
+        "direction": direction,
+        "entry":   entry,
+        "exit":    exit,
+        "sl":      sl,
+        "tp":      tp
     }
     trades.append(trade)
     save_trades(trades)
@@ -426,10 +572,11 @@ def main():
   │  4. View stats (all time)       │
   │  5. Growth roadmap              │
   │  6. Funded income projections   │
-  │  7. Exit                        │
+  │  7. Web Application Server      │
+  │  8. Exit                        │
   └─────────────────────────────────┘""")
 
-        choice = input("\n  Choose (1–7): ").strip()
+        choice = input("\n  Choose (1–8): ").strip()
 
         if choice == "1":
             print("\n  --- POSITION SIZER ---")
@@ -482,10 +629,20 @@ def main():
             funded_income_projection()
 
         elif choice == "7":
+            print("\n  Starting Web Application Server on http://localhost:9090...")
+            try:
+                import server
+                server.run()
+            except ImportError:
+                print("  Error: server.py not found in the current directory.")
+            except Exception as e:
+                print(f"  Error starting server: {e}")
+
+        elif choice == "8":
             print("\n  Trade like a business. See you next session.\n")
             break
         else:
-            print("  Invalid choice — enter 1 to 7.")
+            print("  Invalid choice — enter 1 to 8.")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ProTrader Terminal - Position Sizer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .glass-panel {
+            background: rgba(39, 42, 49, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .glass-input {
+            background: #050505;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus-within {
+            border-color: #adc6ff;
+            box-shadow: 0 0 0 1px #adc6ff, 0 0 15px rgba(173, 198, 255, 0.15);
+        }
+        .glow-dot {
+            box-shadow: 0 0 8px currentColor;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+ 
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 8px rgba(173, 198, 255, 0.4); }
+            50% { opacity: 0.8; text-shadow: 0 0 2px rgba(173, 198, 255, 0.1); }
+        }
+        .animate-subtle-pulse {
+            animation: subtlePulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+ 
+        @keyframes shimmer {
+            0% { transform: translateX(-150%); }
+            100% { transform: translateX(150%); }
+        }
+        .shimmer-effect {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+ 
+        @keyframes gentleBounce {
+            0% { transform: scale(0.95); opacity: 0; }
+            50% { transform: scale(1.02); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-gentle-bounce {
+            animation: gentleBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-bright": "#363941",
+                        "on-secondary": "#003824",
+                        "outline": "#8c909f",
+                        "tertiary-fixed": "#ffdadb",
+                        "primary-fixed-dim": "#adc6ff",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#32353c",
+                        "surface-container-high": "#272a31",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary-fixed": "#002113",
+                        "tertiary-fixed-dim": "#ffb2b7",
+                        "error": "#ffb4ab",
+                        "surface-variant": "#32353c",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-tertiary-container": "#5b0017",
+                        "tertiary": "#ffb2b7",
+                        "on-surface-variant": "#c2c6d6",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-surface": "#e1e2ec",
+                        "secondary": "#4edea3",
+                        "on-error-container": "#ffdad6",
+                        "primary-container": "#4d8eff",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-container": "#ff516a",
+                        "on-background": "#e1e2ec",
+                        "on-secondary-container": "#00311f",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface": "#10131a",
+                        "surface-container-low": "#191b23",
+                        "inverse-surface": "#e1e2ec",
+                        "outline-variant": "#424754",
+                        "background": "#10131a",
+                        "surface-container-lowest": "#0b0e15",
+                        "surface-container": "#1d2027",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-tertiary": "#67001b",
+                        "on-tertiary-fixed-variant": "#92002a",
+                        "on-error": "#690005",
+                        "secondary-container": "#00a572",
+                        "on-primary": "#002e6a",
+                        "inverse-primary": "#005ac2",
+                        "inverse-on-surface": "#2e3038",
+                        "on-primary-fixed": "#001a42",
+                        "on-tertiary-fixed": "#40000d",
+                        "primary": "#adc6ff",
+                        "surface-dim": "#10131a",
+                        "on-primary-container": "#00285d"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "margin-desktop": "40px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "container-max-width": "1440px",
+                        "unit": "4px"
+                    },
+                    fontFamily: {
+                        "headline-lg-mobile": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "label-md": ["Inter", "sans-serif"],
+                        "display-lg": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "label-sm": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"]
+                    },
+                    fontSize: {
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "500" }],
+                        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "label-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.04em", fontWeight: "500" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }]
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex overflow-hidden relative">
+<!-- WebGL Background -->
+<canvas class="fixed inset-0 w-full h-full -z-10 pointer-events-none" id="bg-canvas"></canvas>
+<!-- SideNavBar -->
+<nav class="hidden md:flex bg-surface/80 dark:bg-surface/80 backdrop-blur-xl h-screen w-64 border-r border-white/10 shadow-2xl flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg font-bold tracking-tight text-primary dark:text-primary">ProTrader Terminal</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1 uppercase">Institutional Grade</p>
+</div>
+<div class="px-4 mb-6">
+<button onclick="window.location.href='/journal?new=true'" class="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-3 px-4 rounded flex items-center justify-center gap-2 hover:bg-white/5 transition-colors duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                New Trade
+            </button>
+</div>
+<ul class="flex-1 px-4 space-y-2">
+<li class="">
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Overview</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-4 py-3 rounded text-primary font-bold border-r-2 border-primary bg-primary/5 hover:bg-white/5 transition-colors duration-200 scale-[0.98] transition-transform" href="/sizer">
+<span class="material-symbols-outlined">calculate</span>
+<span class="font-body-md text-body-md">Position Sizer</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal">
+<span class="material-symbols-outlined">import_contacts</span>
+<span class="font-body-md text-body-md">Trade Journal</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/roadmap">
+<span class="material-symbols-outlined">show_chart</span>
+<span class="font-body-md text-body-md">Growth Roadmap</span>
+</a>
+</li>
+</ul>
+<ul class="px-4 mt-auto space-y-2">
+<li class="">
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-3 px-4 py-3 rounded text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+</li>
+<li class="pt-4 border-t border-white/10 flex items-center gap-3 px-4">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A small circular avatar image of a professional trader in a sleek, dark-themed office environment. The lighting is moody with subtle blue and green highlights. High resolution, hyper-realistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnaIzfJ8tJ3XiZ57KcrLs5GiZwJKoLfhZjw2bRVmJMsUsbVoXq9u9vHPCh_ui1N7S_XxLxrz7gFk4AXhMNGyyYqvQEXZiRMEn2apwtlsISLLqkk1veBpX0HQJDLxBXVeEvDlaPHErj280wNbW72J1aB4udykx4s4dcI-ZcAUEqZdjXW_xvOR6vgrLWIz5UQ696Giyg_AwG566OdU3GYo4WVXpegKauIIrsrKXzReBswzmGPQqMFuLuQewicRQQAVAJdoW82t2GeH_4">
+</li>
+</ul>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden bg-transparent">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-margin-desktop h-16 w-full z-40 bg-surface-dim/70 dark:bg-surface-dim/70 backdrop-blur-md shadow-sm border-b border-white/10">
+<div class="flex items-center gap-8">
+<div class="md:hidden">
+<h1 class="font-headline-md text-headline-md font-black text-primary dark:text-primary">Terminal Alpha</h1>
+</div>
+<div class="hidden md:flex relative items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant">search</span>
+<input class="bg-surface-container/80 backdrop-blur border border-outline-variant rounded-full py-1.5 pl-10 pr-4 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary w-64 placeholder-on-surface-variant/50 transition-colors" placeholder="Search markets..." type="text">
+</div>
+<nav class="hidden lg:flex gap-6">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Markets</a>
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1 hover:text-primary transition-colors opacity-80 transition-opacity" href="#">Risk Panel</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">History</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 font-label-md text-label-md py-1.5 px-4 rounded transition-colors duration-200 hidden sm:block">
+                    Connect Broker
+                </button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+<img class="w-8 h-8 rounded-full border border-outline-variant object-cover block md:hidden" data-alt="A small circular avatar image of a user profile. Minimalist dark aesthetic, simple geometric design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYoVE7itNCfGGzQqgQ9mjV_W0Fxf2ijzrdbvOW49OiigvlmlSNNZ-Zk7i--Ut-JLAmi0ELFvs20pMNhbEra_fKFgR3TpcyMPz_Ew33X3UW_MK_RyqJlD2-_7aCIVh4TR4q4hMEqv1yiQ4p1DZV9JrFvxWPjHkSfXuCzZ2CUDPb8Upq43MkEPV2SFR5j8P0SvfvGvvd9lwn1irHMxapZGSTAAlAZV8Z_O6wXr_oLjVat7yqDuC5rQa57-_ne3CDXF61IkQ52Q_wYQIE">
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto p-margin-mobile md:p-gutter xl:p-margin-desktop bg-transparent">
+<div class="max-w-[1200px] mx-auto space-y-6 relative z-10">
+<!-- Header & Symbol Quick Toggle -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface flex items-center gap-3">
+                                Position Sizing Engine
+                                <span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+</span>
+</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Calculate optimal lot size based on strict risk parameters.</p>
+</div>
+<div class="flex bg-surface-container/80 backdrop-blur rounded p-1 border border-outline-variant/30" id="instrument-toggles">
+<button onclick="selectInstrument('XAUUSD', this)" class="px-4 py-1.5 rounded font-label-md text-label-md bg-surface text-primary shadow-sm border border-white/5 inst-btn">XAUUSD</button>
+<button onclick="selectInstrument('FOREX', this)" class="px-4 py-1.5 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors inst-btn">FOREX</button>
+<button onclick="selectInstrument('NAS100', this)" class="px-4 py-1.5 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors inst-btn">NAS100</button>
+</div>
+</div>
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: Inputs -->
+<div class="lg:col-span-7 space-y-6">
+<div class="glass-panel rounded-xl p-6 animate-fade-in-up">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+                                Capital &amp; Risk
+                            </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Account Balance -->
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Account Balance (USD)</label>
+<div class="glass-input rounded-lg flex items-center px-4 py-3">
+<span class="text-outline-variant font-label-md mr-2">$</span>
+<input id="input-balance" oninput="calculateSizing()" class="bg-transparent border-none w-full p-0 font-label-md text-label-md text-on-surface focus:ring-0" type="number" step="1" value="70">
+</div>
+</div>
+<!-- Risk Percentage -->
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex justify-between">
+                                        Risk Per Trade
+                                        <span class="text-error" id="risk-cap-label">Max 5%</span>
+</label>
+<div class="glass-input rounded-lg flex items-center px-4 py-3">
+<input id="input-risk" oninput="calculateSizing()" class="bg-transparent border-none w-full p-0 font-label-md text-label-md text-on-surface focus:ring-0" type="number" step="0.1" value="2.0">
+<span class="text-outline-variant font-label-md ml-2">%</span>
+<div class="flex gap-1 ml-4 border-l border-white/10 pl-4" id="risk-quick-toggles">
+<button onclick="setQuickRisk(1.0, this)" class="text-label-sm font-label-sm bg-surface-container-high hover:bg-surface-bright px-2 py-0.5 rounded text-on-surface-variant transition-colors risk-btn">1.0</button>
+<button onclick="setQuickRisk(2.0, this)" class="text-label-sm font-label-sm bg-primary/20 text-primary px-2 py-0.5 rounded border border-primary/30 risk-btn">2.0</button>
+<button onclick="setQuickRisk(5.0, this)" class="text-label-sm font-label-sm bg-surface-container-high hover:bg-surface-bright px-2 py-0.5 rounded text-on-surface-variant transition-colors risk-btn">5.0</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-6 animate-fade-in-up delay-100">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">my_location</span>
+                                Trade Parameters
+                            </h3>
+<div class="space-y-6">
+<!-- Stop Loss -->
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Stop Loss (Points)</label>
+<div class="glass-input rounded-lg flex items-center px-4 py-3">
+<input id="input-sl" oninput="calculateSizing()" class="bg-transparent border-none w-full p-0 font-label-md text-label-md text-on-surface focus:ring-0" type="number" step="0.5" value="8">
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- RR Ratio -->
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Risk Reward (RR) Ratio</label>
+<div class="glass-input rounded-lg flex items-center px-4 py-3">
+<input id="input-rr" oninput="calculateSizing()" class="bg-transparent border-none w-full p-0 font-label-md text-label-md text-on-surface focus:ring-0" type="number" step="0.1" value="2.0">
+</div>
+</div>
+<!-- Target Reward -->
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Full Profit target (Points)</label>
+<div class="glass-input rounded-lg flex items-center px-4 py-3 bg-surface/30">
+<input id="input-target-points" class="bg-transparent border-none w-full p-0 font-label-md text-label-md text-on-surface-variant focus:ring-0" type="text" value="16" readonly>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Outputs & Warnings -->
+<div class="lg:col-span-5 space-y-6">
+<!-- Main Output Card -->
+<div class="glass-panel rounded-xl p-6 flex flex-col justify-between relative overflow-hidden group">
+<!-- Subtle background glow -->
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700 pointer-events-none"></div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Recommended Lot Size</p>
+<div class="font-display-lg text-display-lg text-primary tracking-tighter" id="output-lots">
+                                    0.000 <span class="text-headline-md text-primary/50 ml-1">Lots</span>
+</div>
+</div>
+<div class="mt-8 space-y-4">
+<div class="flex justify-between items-center border-b border-white/5 pb-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Value at Risk</span>
+<span class="font-label-md text-label-md text-error font-bold" id="output-risk-amount">-$0.00</span>
+</div>
+<div class="flex justify-between items-center border-b border-white/5 pb-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">TP1 Profit (60% split)</span>
+<span class="font-label-md text-label-md text-secondary font-bold" id="output-tp1">+$0.00</span>
+</div>
+<div class="flex justify-between items-center border-b border-white/5 pb-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">TP2 Runner (40% split)</span>
+<span class="font-label-md text-label-md text-secondary font-bold" id="output-tp2">+$0.00</span>
+</div>
+<div class="flex justify-between items-center border-b border-white/5 pb-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Total Target Profit</span>
+<span class="font-label-md text-label-md text-secondary font-bold" id="output-total-profit">+$0.00</span>
+</div>
+<div class="flex justify-between items-center pt-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Daily Limits / Target</span>
+<span class="font-label-md text-label-md text-on-surface" id="output-daily-limits">Stop: $0.00 / Target: $0.00</span>
+</div>
+</div>
+</div>
+<!-- Risk Warning Panel -->
+<div id="risk-warning-panel" class="bg-error-container/20 backdrop-blur border border-error/30 rounded-xl p-4 flex gap-4 items-start shadow-lg" style="display: none;">
+<span class="material-symbols-outlined text-error mt-0.5">warning</span>
+<div>
+<h4 class="font-label-md text-label-md text-error mb-1" id="risk-warning-title">Risk Limits Exceeded</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm" id="risk-warning-desc">Daily loss limit or max risk % reached. Adjust parameters to continue.</p>
+</div>
+</div>
+<!-- Copy Action -->
+<button onclick="copyParametersToClipboard()" class="w-full bg-primary text-on-primary font-label-md text-label-md py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-fixed transition-colors shadow-[0_0_15px_rgba(173,198,255,0.2)] relative overflow-hidden group">
+<span class="material-symbols-outlined relative z-10">content_copy</span>
+<span class="relative z-10" id="copy-btn-text">Copy Parameters to Clipboard</span>
+<div class="absolute inset-0 w-full h-full shimmer-effect pointer-events-none"></div>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+    const canvas = document.getElementById('bg-canvas');
+    const gl = canvas.getContext('webgl');
+    
+    if (gl) {
+        const vsSource = `
+            attribute vec4 aVertexPosition;
+            void main() {
+                gl_Position = aVertexPosition;
+            }
+        `;
+        const fsSource = `
+            precision highp float;
+            uniform float u_time;
+            uniform vec2 u_resolution;
+
+            void main() {
+                vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                
+                // Create a subtle dark digital grid/noise effect
+                float grid = sin(uv.x * 100.0 + u_time * 0.1) * sin(uv.y * 100.0 + u_time * 0.1);
+                grid = smoothstep(0.95, 1.0, grid);
+                
+                // Slow moving dark blue/slate waves
+                float wave = sin(uv.x * 3.0 + u_time * 0.2) * 0.5 + 0.5;
+                float wave2 = cos(uv.y * 2.0 - u_time * 0.15) * 0.5 + 0.5;
+                
+                vec3 color1 = vec3(0.02, 0.04, 0.08); // Deep navy
+                vec3 color2 = vec3(0.05, 0.06, 0.1);  // Slightly lighter slate
+                
+                vec3 finalColor = mix(color1, color2, wave * wave2);
+                finalColor += grid * 0.02; // Very faint digital texture
+                
+                gl_FragColor = vec4(finalColor, 1.0);
+            }
+        `;
+        
+        function compileShader(gl, type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            return shader;
+        }
+        
+        const vertexShader = compileShader(gl, gl.VERTEX_SHADER, vsSource);
+        const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fsSource);
+        
+        const shaderProgram = gl.createProgram();
+        gl.attachShader(shaderProgram, vertexShader);
+        gl.attachShader(shaderProgram, fragmentShader);
+        gl.linkProgram(shaderProgram);
+        gl.useProgram(shaderProgram);
+        
+        const positions = new Float32Array([
+            -1.0, -1.0,
+             1.0, -1.0,
+            -1.0,  1.0,
+            -1.0,  1.0,
+             1.0, -1.0,
+             1.0,  1.0,
+        ]);
+        
+        const positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+        
+        const positionAttributeLocation = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+        gl.enableVertexAttribArray(positionAttributeLocation);
+        gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+        
+        const timeUniformLocation = gl.getUniformLocation(shaderProgram, "u_time");
+        const resolutionUniformLocation = gl.getUniformLocation(shaderProgram, "u_resolution");
+        
+        function render(time) {
+            time *= 0.001; // convert to seconds
+            
+            if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+            }
+            
+            gl.uniform1f(timeUniformLocation, time);
+            gl.uniform2f(resolutionUniformLocation, canvas.width, canvas.height);
+            
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+            requestAnimationFrame(render);
+        }
+        requestAnimationFrame(render);
+    }
+    
+    // ── Position Sizing Engine Logic ──
+    let activeInstrument = 'XAUUSD';
+    let calculatedData = null;
+    
+    function selectInstrument(inst, btn) {
+        activeInstrument = inst;
+        
+        // Update active class on buttons
+        const container = document.getElementById('instrument-toggles');
+        container.querySelectorAll('.inst-btn').forEach(b => {
+            b.className = "px-4 py-1.5 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors inst-btn";
+        });
+        btn.className = "px-4 py-1.5 rounded font-label-md text-label-md bg-surface text-primary shadow-sm border border-white/5 inst-btn";
+        
+        // Sensible default stop loss per instrument
+        if (inst === 'XAUUSD') {
+            document.getElementById('input-sl').value = 8;
+        } else if (inst === 'FOREX') {
+            document.getElementById('input-sl').value = 15;
+        } else if (inst === 'NAS100') {
+            document.getElementById('input-sl').value = 50;
+        }
+        
+        calculateSizing();
+    }
+    
+    function setQuickRisk(risk, btn) {
+        document.getElementById('input-risk').value = risk.toFixed(1);
+        
+        // Update active style
+        const container = document.getElementById('risk-quick-toggles');
+        container.querySelectorAll('.risk-btn').forEach(b => {
+            b.className = "text-label-sm font-label-sm bg-surface-container-high hover:bg-surface-bright px-2 py-0.5 rounded text-on-surface-variant transition-colors risk-btn";
+        });
+        btn.className = "text-label-sm font-label-sm bg-primary/20 text-primary px-2 py-0.5 rounded border border-primary/30 risk-btn";
+        
+        calculateSizing();
+    }
+    
+    async function calculateSizing() {
+        const balance = parseFloat(document.getElementById('input-balance').value) || 0.0;
+        const risk_pct = parseFloat(document.getElementById('input-risk').value) || 0.0;
+        const sl_points = parseFloat(document.getElementById('input-sl').value) || 0.0;
+        const rr = parseFloat(document.getElementById('input-rr').value) || 0.0;
+        
+        // Update read-only Target Reward field
+        const targetVal = sl_points * rr;
+        document.getElementById('input-target-points').value = targetVal.toFixed(1);
+        
+        if (balance <= 0 || risk_pct <= 0 || sl_points <= 0 || rr <= 0) return;
+        
+        try {
+            const response = await fetch('/api/calculate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    balance: balance,
+                    risk_pct: risk_pct,
+                    sl_points: sl_points,
+                    rr: rr,
+                    instrument: activeInstrument
+                })
+            });
+            
+            const data = await response.json();
+            calculatedData = data;
+            
+            // Populate outputs
+            document.getElementById('output-lots').innerHTML = `${data.lot_size.toFixed(3)} <span class="text-headline-md text-primary/50 ml-1">Lots</span>`;
+            document.getElementById('output-risk-amount').innerText = `-$${data.risk_amount.toFixed(2)}`;
+            document.getElementById('output-tp1').innerText = `+$${data.tp1_profit.toFixed(2)}`;
+            document.getElementById('output-tp2').innerText = `+$${data.tp2_profit.toFixed(2)}`;
+            document.getElementById('output-total-profit').innerText = `+$${data.total_profit.toFixed(2)}`;
+            document.getElementById('output-daily-limits').innerText = `Stop: $${data.daily_stop.toFixed(2)} / Target: $${data.daily_target.toFixed(2)} (Max losses: ${data.max_losses})`;
+            
+            // Sizer Validations / warnings
+            const warningPanel = document.getElementById('risk-warning-panel');
+            const warningTitle = document.getElementById('risk-warning-title');
+            const warningDesc = document.getElementById('risk-warning-desc');
+            
+            if (risk_pct > 3.0) {
+                warningPanel.style.display = 'flex';
+                warningPanel.className = "bg-error-container/20 backdrop-blur border border-error/30 rounded-xl p-4 flex gap-4 items-start shadow-lg";
+                warningTitle.innerText = "Risk Level: " + (risk_pct > 5.0 ? "DANGER" : "ELEVATED");
+                warningTitle.className = "font-label-md text-label-md text-error mb-1";
+                warningDesc.innerText = data.risk_warning;
+            } else if (!data.rr_valid || !data.sl_valid) {
+                warningPanel.style.display = 'flex';
+                warningPanel.className = "bg-[#ff9800]/10 backdrop-blur border border-[#ff9800]/30 rounded-xl p-4 flex gap-4 items-start shadow-lg";
+                warningTitle.innerText = "System Parameters Check Failed";
+                warningTitle.className = "font-label-md text-label-md text-[#ff9800] mb-1";
+                
+                let details = [];
+                if (!data.rr_valid) details.push("RR ratio should be at least 1.5:1");
+                if (!data.sl_valid && activeInstrument === 'XAUUSD') details.push("Stop Loss > 12 points is too wide for scalp limit");
+                warningDesc.innerText = details.join(". ");
+            } else {
+                warningPanel.style.display = 'none';
+            }
+            
+        } catch (e) {
+            console.error("Position calculations failed:", e);
+        }
+    }
+    
+    function copyParametersToClipboard() {
+        if (!calculatedData) return;
+        
+        const text = `--- PROTRADER POSITION PARAMETERS ---
+Instrument: ${calculatedData.instrument}
+Balance: $${calculatedData.balance.toFixed(2)}
+Risk Amount: $${calculatedData.risk_amount.toFixed(2)} (${document.getElementById('input-risk').value}%)
+Stop Loss: ${document.getElementById('input-sl').value} points
+RR Ratio: ${document.getElementById('input-rr').value}:1
+Recommended Lot Size: ${calculatedData.lot_size.toFixed(3)} Lots
+TP1 Split: $${calculatedData.tp1_profit.toFixed(2)}
+TP2 Split: $${calculatedData.tp2_profit.toFixed(2)}
+Total Target Profit: $${calculatedData.total_profit.toFixed(2)}`;
+
+        navigator.clipboard.writeText(text).then(() => {
+            const btnText = document.getElementById('copy-btn-text');
+            btnText.innerText = "Copied successfully!";
+            btnText.className = "relative z-10 text-secondary font-bold";
+            setTimeout(() => {
+                btnText.innerText = "Copy Parameters to Clipboard";
+                btnText.className = "relative z-10";
+            }, 2000);
+        }).catch(err => {
+            console.error("Failed to copy parameters:", err);
+        });
+    }
+    
+    // Run on initial mount
+    window.addEventListener('DOMContentLoaded', calculateSizing);
+</script>
+</body></html>

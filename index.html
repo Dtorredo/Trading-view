@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ProTrader Terminal - Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#363941",
+                        "on-secondary": "#003824",
+                        "outline": "#8c909f",
+                        "tertiary-fixed": "#ffdadb",
+                        "primary-fixed-dim": "#adc6ff",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#32353c",
+                        "surface-container-high": "#272a31",
+                        "surface-tint": "#adc6ff",
+                        "on-secondary-fixed": "#002113",
+                        "tertiary-fixed-dim": "#ffb2b7",
+                        "error": "#ffb4ab",
+                        "surface-variant": "#32353c",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-tertiary-container": "#5b0017",
+                        "tertiary": "#ffb2b7",
+                        "on-surface-variant": "#c2c6d6",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-surface": "#e1e2ec",
+                        "secondary": "#4edea3",
+                        "on-error-container": "#ffdad6",
+                        "primary-container": "#4d8eff",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary-container": "#ff516a",
+                        "on-background": "#e1e2ec",
+                        "on-secondary-container": "#00311f",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface": "#10131a",
+                        "surface-container-low": "#191b23",
+                        "inverse-surface": "#e1e2ec",
+                        "outline-variant": "#424754",
+                        "background": "#10131a",
+                        "surface-container-lowest": "#0b0e15",
+                        "surface-container": "#1d2027",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-tertiary": "#67001b",
+                        "on-tertiary-fixed-variant": "#92002a",
+                        "on-error": "#690005",
+                        "secondary-container": "#00a572",
+                        "on-primary": "#002e6a",
+                        "inverse-primary": "#005ac2",
+                        "inverse-on-surface": "#2e3038",
+                        "on-primary-fixed": "#001a42",
+                        "on-tertiary-fixed": "#40000d",
+                        "primary": "#adc6ff",
+                        "surface-dim": "#10131a",
+                        "on-primary-container": "#00285d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "container-max-width": "1440px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "label-md": ["Inter", "sans-serif"],
+                        "display-lg": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "label-sm": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Glassmorphism utilities */
+        .glass-panel {
+            background-color: rgba(29, 32, 39, 0.4); /* surface-container */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        .emerald-text { color: #4edea3; }
+        .crimson-text { color: #ff516a; }
+        .bg-emerald-glass { background-color: rgba(78, 222, 163, 0.1); border: 1px solid rgba(78, 222, 163, 0.2); }
+        .bg-crimson-glass { background-color: rgba(255, 81, 106, 0.1); border: 1px solid rgba(255, 81, 106, 0.2); }
+        
+        .glowing-dot {
+            width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+            box-shadow: 0 0 8px currentColor;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar (Shared Component) -->
+<nav class="hidden md:flex flex-col h-screen w-64 border-r border-white/10 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl shadow-2xl z-50 fixed left-0 top-0 py-6">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg font-bold tracking-tight text-primary dark:text-primary">ProTrader Terminal</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Institutional Grade</p>
+</div>
+<div class="flex-1 px-4 space-y-2">
+<!-- Active Tab: Overview -->
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary/5 scale-[0.98] transition-transform" href="/">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/sizer">
+<span class="material-symbols-outlined">calculate</span>
+<span class="font-label-md text-label-md">Position Sizer</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal">
+<span class="material-symbols-outlined">import_contacts</span>
+<span class="font-label-md text-label-md">Trade Journal</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/roadmap">
+<span class="material-symbols-outlined">show_chart</span>
+<span class="font-label-md text-label-md">Growth Roadmap</span>
+</a>
+</div>
+<div class="px-4 mt-auto space-y-4">
+<button onclick="window.location.href='/journal?new=true'" class="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-3 rounded-lg hover:brightness-110 transition-all flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined">add</span>
+<span>New Trade</span>
+</button>
+<div class="space-y-2">
+<a class="flex items-center space-x-3 px-4 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-label-sm text-label-sm">Support</span>
+</a>
+</div>
+<div class="flex items-center px-4 pt-4 border-t border-white/10">
+<img alt="Professional Trader Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A small, professional portrait photo of a trader in a modern, dark-themed office environment. Highly detailed, cinematic lighting, emphasizing focus and precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVbQBfFwswRiJniEniOQwoHdxNwmajU_8uglW8u3zooi8hVT27CG_Oy54VEWrmdNIbgfckycmJ0PHsYtMa8v-jrgR14SBYF2-ut_0Q3dx299SQnG6DwwFbrUGz915AIGYqlmMdkC-QDIOS4XGS5CHA2bLMXYXrol0HdXvsDpoKO4kvh8q-JfPXklDhe8e0BHUpW1Trxr5gT5dbJzUF6IR0CDcsJo7eKx0OJgtWT3lUOg57u1wLgGVdpsS6yDanGwZa7rxWBnt1uXnI"/>
+<div class="ml-3">
+<p class="font-label-sm text-label-sm text-on-surface">Alex Mercer</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant text-[10px]">Prop Firm Funded</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col min-h-screen max-w-container-max-width mx-auto w-full">
+<!-- TopNavBar (Shared Component) -->
+<header class="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 w-full z-40 docked full-width top-0 border-b border-white/10 bg-surface-container-low dark:bg-surface-container-low bg-surface-dim/90 dark:bg-surface-dim/90 backdrop-blur-md shadow-sm sticky">
+<!-- Mobile Brand (Hidden on Desktop since SideNav shows it) -->
+<div class="md:hidden flex items-center">
+<h1 class="font-headline-md text-headline-md font-black text-primary dark:text-primary">Terminal Alpha</h1>
+</div>
+<!-- Left: Search (Desktop) -->
+<div class="hidden md:flex items-center flex-1 max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-[#050505] border border-white/10 rounded-md py-1.5 pl-9 pr-3 text-label-md font-label-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Search markets, tickers..." type="text"/>
+</div>
+</div>
+<!-- Middle: Nav Links (Desktop) -->
+<div class="hidden md:flex items-center space-x-6 mx-8">
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="#">Markets</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="#">Risk Panel</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="#">History</a>
+</div>
+<!-- Right: Actions -->
+<div class="flex items-center space-x-4">
+<button class="hidden lg:flex items-center px-4 py-1.5 rounded-md bg-transparent border border-white/20 text-secondary dark:text-secondary font-label-md text-label-md hover:bg-white/5 transition-colors">
+                    Connect Broker
+                </button>
+<div class="flex items-center space-x-3 text-on-surface-variant">
+<button class="hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-tertiary-container rounded-full"></span>
+</button>
+<button class="hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+</div>
+<img alt="User Avatar" class="w-8 h-8 rounded-full md:hidden object-cover border border-outline-variant" data-alt="A small generic user avatar placeholder image in a dark circular frame, lit softly from above." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQZkc164ukvTNvoF0QP6rG2IBKURbWE-VwD__EDy2XG6zXH102flTLsoujdL3yKCmycDp6N385Ep3f58NqayAPKRuniiaHS8a9rBmkB3MMhIHG-Zh-SpqOACUHvsSfTYYRI1JqtBK_gQqfX3Nnk7wRKiph7i_Ctf0ibPF03dLdqJhP8_f6NozID3ICyIuhngqb_JsEgS3f6Xxc6t3LuUKtAKwxkMX0FgZ2evhKkoKbnYLMO8BxZPOyEk6QrQpfcVUN5FDPVKzeWnVg"/>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-margin-mobile md:p-margin-desktop flex-1 space-y-gutter">
+<!-- Top Section: Stats & Session -->
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-gutter">
+<!-- Stat Cards (Bento Grid Style) -->
+<div class="lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Win Rate -->
+<div class="glass-panel rounded-xl p-4 flex flex-col justify-between relative overflow-hidden group">
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Win Rate</span>
+<span class="material-symbols-outlined text-outline-variant text-lg group-hover:text-primary transition-colors">analytics</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface" id="win-rate-val">--%</div>
+<div class="mt-2 flex items-center space-x-2 font-label-sm text-label-sm emerald-text" id="win-rate-sub">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>0.0% Win Rate</span>
+</div>
+</div>
+</div>
+<!-- Expectancy -->
+<div class="glass-panel rounded-xl p-4 flex flex-col justify-between relative overflow-hidden group">
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Sys Expectancy</span>
+<span class="material-symbols-outlined text-outline-variant text-lg group-hover:text-primary transition-colors">functions</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface" id="expectancy-val">$0.00</div>
+<div class="mt-2 font-label-sm text-label-sm text-on-surface-variant">
+                                Per trade average
+                            </div>
+</div>
+</div>
+<!-- Max Drawdown -->
+<div class="glass-panel rounded-xl p-4 flex flex-col justify-between relative overflow-hidden group">
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Max Drawdown</span>
+<span class="material-symbols-outlined text-outline-variant text-lg group-hover:text-tertiary-container transition-colors">water_drop</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface" id="drawdown-val">0.0%</div>
+<div class="mt-2 flex items-center space-x-2 font-label-sm text-label-sm text-on-surface-variant">
+<span>Peak-to-trough</span>
+</div>
+</div>
+</div>
+<!-- Consistency -->
+<div class="glass-panel rounded-xl p-4 flex flex-col justify-between relative overflow-hidden group">
+<div class="flex justify-between items-start mb-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Consistency</span>
+<span class="material-symbols-outlined text-outline-variant text-lg group-hover:text-secondary-container transition-colors">fact_check</span>
+</div>
+<div>
+<div class="font-display-lg text-display-lg text-on-surface" id="consistency-val">--/100</div>
+<div class="w-full bg-surface-container-highest h-1 mt-3 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[0%] rounded-full shadow-[0_0_8px_rgba(173,198,255,0.5)]" id="consistency-bar"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Current Session Widget -->
+<div class="lg:col-span-1 glass-panel rounded-xl p-5 border border-primary/20 relative">
+<div class="absolute inset-0 bg-primary/5 rounded-xl pointer-events-none"></div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-label-md text-label-md uppercase tracking-wider text-primary">Current Session</h3>
+<span class="flex items-center space-x-1 emerald-text text-xs"><span class="glowing-dot"></span> <span>LIVE</span></span>
+</div>
+<div class="mb-6">
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-1">Session PnL</div>
+<div class="font-headline-lg text-headline-lg font-bold" id="session-pnl-val">+$0.00</div>
+</div>
+<div class="space-y-3">
+<div class="font-label-sm text-label-sm text-on-surface-variant flex justify-between">
+<span>Max Daily Loss Limit</span>
+<span class="text-on-surface" id="daily-loss-val">-$0.00</span>
+</div>
+<div class="bg-surface-container-highest p-3 rounded-lg border border-white/5">
+<div class="flex items-center space-x-2 text-on-surface text-sm mb-2">
+<span class="material-symbols-outlined text-tertiary-container text-sm" id="risk-warning-icon">info</span>
+<span id="risk-warning-title">Risk Remaining</span>
+</div>
+<div class="font-label-md text-label-md text-on-surface" id="risk-remaining-val">No trades logged today.</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Middle Section: Equity Curve & Recent Trades -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Equity Curve (Large Glass Card) -->
+<div class="lg:col-span-2 glass-panel rounded-xl p-6 min-h-[400px] flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Equity Curve</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Net cumulative profit over last 30 days</p>
+</div>
+<div class="flex bg-[#050505] rounded-md p-1 border border-white/10">
+<button class="px-3 py-1 text-xs font-label-md text-on-surface-variant hover:text-on-surface transition-colors rounded">1W</button>
+<button class="px-3 py-1 text-xs font-label-md text-primary bg-white/10 rounded shadow-sm">1M</button>
+<button class="px-3 py-1 text-xs font-label-md text-on-surface-variant hover:text-on-surface transition-colors rounded">3M</button>
+<button class="px-3 py-1 text-xs font-label-md text-on-surface-variant hover:text-on-surface transition-colors rounded">YTD</button>
+</div>
+</div>
+<!-- Chart Placeholder -->
+<div class="flex-1 w-full bg-[#050505] rounded-lg border border-white/5 relative overflow-hidden flex items-end">
+<!-- Simulated Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between py-4 px-2 opacity-[0.03] pointer-events-none">
+<div class="border-b border-white w-full"></div>
+<div class="border-b border-white w-full"></div>
+<div class="border-b border-white w-full"></div>
+<div class="border-b border-white w-full"></div>
+</div>
+<!-- Decorative SVG for Area Chart -->
+<svg class="w-full h-3/4 text-primary" preserveaspectratio="none" viewbox="0 0 100 100">
+<defs>
+<lineargradient id="chart-gradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="currentColor" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="currentColor" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path id="equity-chart-area" d="M0 100 H 100 V 100 H 0 Z" fill="url(#chart-gradient)"></path>
+<path id="equity-chart-line" class="drop-shadow-[0_0_4px_rgba(173,198,255,0.8)]" d="M0 100 H 100" fill="none" stroke="currentColor" stroke-width="0.5"></path>
+</svg>
+<!-- Tooltip Example -->
+<div class="absolute top-1/4 left-2/3 glass-panel px-3 py-2 rounded-md pointer-events-none hidden md:block border-primary/30">
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-1">Oct 24, 14:30</div>
+<div class="font-label-md text-label-md text-on-surface emerald-text">+$4,250.00</div>
+</div>
+</div>
+</div>
+<!-- Recent Trades Table (Bento Style) -->
+<div class="lg:col-span-1 glass-panel rounded-xl flex flex-col overflow-hidden">
+<div class="p-5 border-b border-white/5 flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface">Recent Trades</h2>
+<button class="text-primary hover:text-primary-fixed transition-colors font-label-sm text-label-sm uppercase tracking-wider">View All</button>
+</div>
+<div class="flex-1 overflow-y-auto p-2 space-y-1" id="recent-trades-list">
+    <!-- Dynamic trades go here -->
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<script>
+async function loadDashboardData() {
+    try {
+        const response = await fetch('/api/stats');
+        const data = await response.json();
+        
+        const allStats = data.all;
+        const todayStats = data.today;
+        const trades = data.trades;
+        
+        // 1. Win Rate Card
+        const winRateVal = document.getElementById('win-rate-val');
+        const winRateSub = document.getElementById('win-rate-sub');
+        if (winRateVal && allStats.total_trades > 0) {
+            winRateVal.innerHTML = `${allStats.win_rate}<span class="text-xl text-on-surface-variant">%</span>`;
+            winRateSub.innerHTML = `
+                <span class="material-symbols-outlined text-sm">trending_up</span>
+                <span>${allStats.win_count} Wins / ${allStats.loss_count} Losses</span>
+            `;
+        } else if (winRateVal) {
+            winRateVal.innerHTML = `0<span class="text-xl text-on-surface-variant">%</span>`;
+            winRateSub.innerHTML = `<span>0 trades logged</span>`;
+        }
+        
+        // 2. Expectancy Card
+        const expectancyVal = document.getElementById('expectancy-val');
+        if (expectancyVal) {
+            const expectancy = allStats.expectancy || 0;
+            const sign = expectancy >= 0 ? '$' : '-$';
+            expectancyVal.innerHTML = `<span class="text-xl text-on-surface-variant">${sign}</span>${Math.abs(expectancy).toFixed(2)}`;
+        }
+        
+        // 3. Max Drawdown Card
+        const drawdownVal = document.getElementById('drawdown-val');
+        if (drawdownVal) {
+            const dd = Math.abs(allStats.max_drawdown || 0);
+            drawdownVal.innerHTML = `${dd.toFixed(1)}<span class="text-xl text-on-surface-variant">%</span>`;
+        }
+        
+        // 4. Consistency Card
+        const consistencyVal = document.getElementById('consistency-val');
+        const consistencyBar = document.getElementById('consistency-bar');
+        if (consistencyVal && consistencyBar) {
+            // Consistency score derived from standard deviation of PnL: lower std dev = higher consistency score
+            let score = 100;
+            if (allStats.total_trades > 1) {
+                const stdDev = allStats.consistency || 0;
+                // Scale score from 100 down to 0, e.g., std dev of 500 = 0 score
+                score = Math.max(0, Math.round(100 - (stdDev / 5)));
+            }
+            consistencyVal.innerHTML = `${score}<span class="text-xl text-on-surface-variant">/100</span>`;
+            consistencyBar.style.width = `${score}%`;
+        }
+        
+        // 5. Current Session Widget
+        const sessionPnlVal = document.getElementById('session-pnl-val');
+        const dailyLossVal = document.getElementById('daily-loss-val');
+        const riskRemainingVal = document.getElementById('risk-remaining-val');
+        const riskWarningIcon = document.getElementById('risk-warning-icon');
+        const riskWarningTitle = document.getElementById('risk-warning-title');
+        
+        if (sessionPnlVal && todayStats) {
+            const pnl = todayStats.total_pnl || 0.0;
+            const formattedPnl = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            sessionPnlVal.innerText = formattedPnl;
+            
+            if (pnl >= 0) {
+                sessionPnlVal.className = "font-headline-lg text-headline-lg emerald-text font-bold";
+            } else {
+                sessionPnlVal.className = "font-headline-lg text-headline-lg crimson-text font-bold";
+            }
+            
+            // Assume daily loss limit of 4% of $70 balance (just for display limit logic matching python sizer defaults)
+            const defaultLimit = 2.80; // $2.80 loss limit for $70 balance at 4%
+            dailyLossVal.innerText = `-$${defaultLimit.toFixed(2)}`;
+            
+            // Losses today check
+            const todayLosses = trades.filter(t => t.date === new Date().toISOString().split('T')[0] && t.result === 'loss');
+            const lossCount = todayLosses.length;
+            
+            if (lossCount >= 2) {
+                riskRemainingVal.innerText = "DAILY STOP HIT — CLOSE PLATFORM.";
+                riskRemainingVal.className = "font-label-md text-label-md text-tertiary-container font-bold animate-pulse";
+                if (riskWarningIcon) {
+                    riskWarningIcon.innerText = "cancel";
+                    riskWarningIcon.className = "material-symbols-outlined text-tertiary-container text-sm";
+                }
+                if (riskWarningTitle) {
+                    riskWarningTitle.innerText = "Daily Stop Limit Hit";
+                    riskWarningTitle.className = "text-tertiary-container text-sm font-bold";
+                }
+            } else {
+                const remaining = 2 - lossCount;
+                riskRemainingVal.innerText = `${remaining} loss${remaining > 1 ? 'es' : ''} remaining before daily stop limit.`;
+                riskRemainingVal.className = "font-label-md text-label-md text-on-surface";
+                if (riskWarningIcon) {
+                    riskWarningIcon.innerText = "info";
+                    riskWarningIcon.className = "material-symbols-outlined text-primary text-sm";
+                }
+            }
+        }
+        
+        // 6. Recent Trades List
+        const listContainer = document.getElementById('recent-trades-list');
+        if (listContainer) {
+            listContainer.innerHTML = '';
+            
+            if (trades.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-8 text-on-surface-variant font-label-sm text-label-sm">
+                        No trades logged yet. Click "New Trade" to start.
+                    </div>
+                `;
+            } else {
+                // Show up to 4 recent trades
+                const recent = trades.slice(0, 4);
+                recent.forEach(trade => {
+                    const isWin = trade.result === 'win';
+                    const isLoss = trade.result === 'loss';
+                    const pnlClass = isWin ? 'emerald-text' : (isLoss ? 'crimson-text' : 'text-on-surface-variant');
+                    const pnlPrefix = trade.pnl >= 0 ? '+$' : '-$';
+                    const pnlText = pnlPrefix + Math.abs(trade.pnl).toFixed(2);
+                    
+                    const item = document.createElement('div');
+                    item.className = "flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group cursor-pointer";
+                    item.onclick = () => window.location.href = '/journal';
+                    item.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-white/5 group-hover:border-primary/30 transition-colors">
+                                <span class="font-label-md text-label-md text-on-surface">${trade.pattern}</span>
+                            </div>
+                            <div>
+                                <div class="font-label-md text-label-md text-on-surface">${trade.session} Session</div>
+                                <div class="flex space-x-1 mt-1">
+                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm ${isWin ? 'bg-emerald/10 text-emerald border border-emerald/20' : (isLoss ? 'bg-tertiary-container/10 text-tertiary border border-tertiary-container/20' : 'bg-white/10 text-on-surface border border-white/20')}">${trade.result.toUpperCase()}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-label-md text-label-md ${pnlClass}">${pnlText}</div>
+                            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">${trade.time}</div>
+                        </div>
+                    `;
+                    listContainer.appendChild(item);
+                });
+            }
+        }
+        
+        // 7. Equity Curve SVG Chart
+        const curve = allStats.equity_curve || [];
+        const chartLine = document.getElementById('equity-chart-line');
+        const chartArea = document.getElementById('equity-chart-area');
+        
+        if (chartLine && chartArea) {
+            // Append 0 as the starting baseline if curve exists
+            const points = curve.length > 0 ? [0, ...curve] : [0];
+            const paths = generateSvgPaths(points);
+            chartLine.setAttribute('d', paths.line);
+            chartArea.setAttribute('d', paths.area);
+        }
+        
+    } catch (e) {
+        console.error("Failed to load dashboard statistics:", e);
+    }
+}
+
+function generateSvgPaths(points) {
+    if (points.length <= 1) {
+        return { line: "M 0 50 H 100", area: "M 0 50 H 100 V 100 H 0 Z" };
+    }
+    
+    let min = Math.min(...points);
+    let max = Math.max(...points);
+    let range = max - min;
+    if (range === 0) range = 1;
+    
+    let pathPoints = [];
+    for (let i = 0; i < points.length; i++) {
+        let x = (i / (points.length - 1)) * 100;
+        // Invert Y mapping for SVG space (Y=0 is top, Y=100 is bottom)
+        // Draw between Y=10 and Y=90 to prevent clipping
+        let y = 90 - ((points[i] - min) / range) * 80;
+        pathPoints.push(`${x.toFixed(1)} ${y.toFixed(1)}`);
+    }
+    
+    let linePath = "M " + pathPoints.join(" L ");
+    let areaPath = `${linePath} V 100 H 0 Z`;
+    return { line: linePath, area: areaPath };
+}
+
+// Load stats on page load
+window.addEventListener('DOMContentLoaded', loadDashboardData);
+</script>
+
+</body></html>
