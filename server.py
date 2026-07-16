@@ -8,7 +8,7 @@ import sys
 # Import functions from trading_dashboard
 import trading_dashboard
 
-PORT = 9090
+PORT = int(os.environ.get('PORT', 9090))
 
 class DashboardHandler(http.server.BaseHTTPRequestHandler):
     def log_message(self, format, *args):
