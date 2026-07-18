@@ -50,8 +50,22 @@ class DashboardHandler(http.server.BaseHTTPRequestHandler):
             self.serve_file('index.html')
         elif path == '/sizer':
             self.serve_file('sizer.html')
-        elif path == '/journal':
+        elif path == '/journal' or path == '/journal/sessions':
             self.serve_file('journal.html')
+        elif path == '/journal/tradelog':
+            self.serve_file('journal_tradelog.html')
+        elif path == '/journal/playbook':
+            self.serve_file('journal_playbook.html')
+        elif path == '/journal/tags':
+            self.serve_file('journal_tags.html')
+        elif path == '/journal/notes':
+            self.serve_file('journal_notes.html')
+        elif path == '/journal/reports':
+            self.serve_file('journal_reports.html')
+        elif path == '/chart':
+            self.serve_file('chart.html')
+        elif path == '/calendar':
+            self.serve_file('calendar.html')
         elif path == '/roadmap':
             self.serve_file('roadmap.html')
         elif path == '/api/stats':

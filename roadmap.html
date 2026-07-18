@@ -246,66 +246,78 @@
 </head>
 <body class="font-body-md text-body-md antialiased overflow-hidden flex h-screen">
 <!-- SideNavBar -->
-<aside class="hidden md:flex flex-col h-full py-6 bg-surface-container dark:bg-surface-container border-r border-white/10 backdrop-blur-lg shadow-2xl h-screen w-64 flex-shrink-0 z-50 transition-all duration-300">
-<!-- Brand / Header -->
-<div class="px-6 mb-8 flex items-center gap-4">
-<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center shrink-0 border border-primary/20">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">terminal</span>
-</div>
-<div>
-<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-primary dark:text-primary leading-none mb-1">ProTrader Terminal</h1>
-<p class="font-label-sm text-label-sm text-on-surface-variant">Institutional Grade</p>
-</div>
-</div>
-<!-- Navigation Tabs -->
-<nav class="flex-1 flex flex-col gap-1 px-3 mt-4">
-<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
-<span class="font-label-md text-label-md">Overview</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/sizer">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">calculate</span>
-<span class="font-label-md text-label-md">Position Sizer</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">import_contacts</span>
-<span class="font-label-md text-label-md">Trade Journal</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary/5 hover:bg-white/5 transition-colors duration-200 active:scale-[0.98] transition-transform" href="/roadmap">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">show_chart</span>
-<span class="font-label-md text-label-md">Growth Roadmap</span>
-</a>
-</nav>
-<!-- CTA -->
-<div class="px-6 mt-auto mb-6">
-<button onclick="window.location.href='/journal?new=true'" class="w-full bg-primary text-on-primary font-label-md text-label-md font-bold py-3 rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] hover:brightness-110 transition-all active:scale-[0.98]">
-                New Trade
-            </button>
-</div>
-<!-- Footer Navigation -->
-<div class="flex flex-col gap-1 px-3 border-t border-white/5 pt-4">
-<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
-<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">settings</span>
-<span class="font-label-sm text-label-sm">Settings</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
-<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">help_outline</span>
-<span class="font-label-sm text-label-sm">Support</span>
-</a>
-</div>
-<!-- User Avatar / Footer -->
-<div class="px-6 mt-6 flex items-center gap-3">
-<div class="w-8 h-8 rounded-full overflow-hidden border border-white/10 shrink-0">
-<img alt="Professional Trader Profile" class="w-full h-full object-cover" data-alt="A macro photograph of a sophisticated digital interface avatar icon glowing with neon blue and silver hues, set against a dark institutional background. High contrast, sharp focus, 8k resolution, photorealistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDROkyRwnjV72CE2d8VNEHb9kbKKwxNsvBfB_C4XkoLevw2wtvp36AEOIekFi4hB42noOibmd09m0RAlg5Ko0XaheGgd002BpODs4HL3dihmRwGyScz5vhxzEbBmRzxB2rqNeSlwS9xijYzrrHt5AE69WyTXizeqhHt_zd5GIgbFsyZm6UYTxkc4ZytIskAp2fS0o2JmjBqO_lBomyxeBop0itTlNbqgTabmUw3g9iPDX0t5EWQNnaBqhWRe0tNPp1bEfOzFqwG6anh"/>
-</div>
-<div class="flex-1 truncate">
-<p class="font-label-sm text-label-sm text-on-surface font-medium truncate">Alex_Quant</p>
-<div class="flex items-center gap-1.5 mt-0.5">
-<div class="status-dot"></div>
-<p class="font-label-sm text-label-sm text-secondary text-[10px] uppercase">Online</p>
-</div>
-</div>
-</div>
+<aside class="hidden md:flex flex-col h-screen w-64 border-r border-white/10 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl shadow-2xl z-50 py-6 overflow-y-auto">
+    <div class="px-6 mb-8">
+        <h1 class="font-headline-lg text-headline-lg font-bold tracking-tight text-primary dark:text-primary">ProTrader Terminal</h1>
+        <p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Institutional Grade</p>
+    </div>
+    
+    <div class="px-4 mb-4">
+        <a href="/chart" class="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-3 rounded-lg hover:brightness-110 transition-all flex items-center justify-center space-x-2">
+            <span class="material-symbols-outlined">candlestick_chart</span>
+            <span>Launch Chart</span>
+        </a>
+    </div>
+
+    <div class="flex-1 px-4 space-y-1">
+        <div class="font-label-sm text-label-sm text-outline px-4 mb-2 mt-4 uppercase tracking-wider">Workspace</div>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/">
+            <span class="material-symbols-outlined text-[20px]">dashboard</span>
+            <span class="font-label-md text-label-md">Overview</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal/sessions">
+            <span class="material-symbols-outlined text-[20px]">import_contacts</span>
+            <span class="font-label-md text-label-md">Sessions</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal/tradelog">
+            <span class="material-symbols-outlined text-[20px]">list_alt</span>
+            <span class="font-label-md text-label-md">Trade Log</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal/playbook">
+            <span class="material-symbols-outlined text-[20px]">menu_book</span>
+            <span class="font-label-md text-label-md">Playbook</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal/tags">
+            <span class="material-symbols-outlined text-[20px]">sell</span>
+            <span class="font-label-md text-label-md">Tags</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal/notes">
+            <span class="material-symbols-outlined text-[20px]">edit_note</span>
+            <span class="font-label-md text-label-md">Notes</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/calendar">
+            <span class="material-symbols-outlined text-[20px]">event</span>
+            <span class="font-label-md text-label-md">Economic Calendar</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/sizer">
+            <span class="material-symbols-outlined text-[20px]">calculate</span>
+            <span class="font-label-md text-label-md">Position Sizer</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/roadmap">
+            <span class="material-symbols-outlined text-[20px]">show_chart</span>
+            <span class="font-label-md text-label-md">Growth Roadmap</span>
+        </a>
+    </div>
+
+    <div class="px-4 mt-8 space-y-4">
+        <div class="space-y-1 border-t border-white/10 pt-4">
+            <a class="flex items-center space-x-3 px-4 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined text-[20px]">settings</span>
+                <span class="font-label-sm text-label-sm">Settings</span>
+            </a>
+            <a class="flex items-center space-x-3 px-4 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined text-[20px]">help_outline</span>
+                <span class="font-label-sm text-label-sm">Support</span>
+            </a>
+        </div>
+        <div class="flex items-center px-4 pt-2">
+            <img alt="Professional Trader Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVbQBfFwswRiJniEniOQwoHdxNwmajU_8uglW8u3zooi8hVT27CG_Oy54VEWrmdNIbgfckycmJ0PHsYtMa8v-jrgR14SBYF2-ut_0Q3dx299SQnG6DwwFbrUGz915AIGYqlmMdkC-QDIOS4XGS5CHA2bLMXYXrol0HdXvsDpoKO4kvh8q-JfPXklDhe8e0BHUpW1Trxr5gT5dbJzUF6IR0CDcsJo7eKx0OJgtWT3lUOg57u1wLgGVdpsS6yDanGwZa7rxWBnt1uXnI"/>
+            <div class="ml-3">
+                <p class="font-label-sm text-label-sm text-on-surface">Alex Mercer</p>
+                <p class="font-label-sm text-label-sm text-on-surface-variant text-[10px]">Prop Firm Funded</p>
+            </div>
+        </div>
+    </div>
 </aside>
 <!-- Main Content Area -->
 <div class="flex-1 flex flex-col h-full overflow-hidden relative">

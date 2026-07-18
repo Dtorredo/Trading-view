@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>ProTrader Terminal - Trade Log</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#adc6ff",
+                        "primary-container": "#4d8eff",
+                        "on-primary-container": "#00285d",
+                        secondary: "#4edea3",
+                        surface: "#10131a",
+                        "surface-dim": "#10131a",
+                        "surface-container": "#1d2027",
+                        "surface-container-low": "#191b23",
+                        "on-surface": "#e1e2ec",
+                        "on-surface-variant": "#c2c6d6",
+                        outline: "#8c909f",
+                        error: "#ffb4ab",
+                    },
+                    fontFamily: {
+                        "body-md": ["Inter", "sans-serif"],
+                        "label-md": ["Inter", "sans-serif"],
+                        "label-sm": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(29, 32, 39, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .table-row-hover:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex antialiased">
+    
+<aside class="hidden md:flex flex-col h-screen w-64 border-r border-white/10 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl shadow-2xl z-50 py-6 overflow-y-auto">
+    <div class="px-6 mb-8">
+        <h1 class="font-headline-lg text-headline-lg font-bold tracking-tight text-primary dark:text-primary">ProTrader Terminal</h1>
+        <p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Institutional Grade</p>
+    </div>
+    
+    <div class="px-4 mb-4">
+        <a href="/chart" class="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-3 rounded-lg hover:brightness-110 transition-all flex items-center justify-center space-x-2">
+            <span class="material-symbols-outlined">candlestick_chart</span>
+            <span>Launch Chart</span>
+        </a>
+    </div>
+
+    <div class="flex-1 px-4 space-y-1">
+        <div class="font-label-sm text-label-sm text-outline px-4 mb-2 mt-4 uppercase tracking-wider">Workspace</div>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/">
+            <span class="material-symbols-outlined text-[20px]">dashboard</span>
+            <span class="font-label-md text-label-md">Overview</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal/sessions">
+            <span class="material-symbols-outlined text-[20px]">import_contacts</span>
+            <span class="font-label-md text-label-md">Sessions</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary/5 transition-colors duration-200 scale-[0.98] transition-transform" href="/journal/tradelog">
+            <span class="material-symbols-outlined text-[20px]">list_alt</span>
+            <span class="font-label-md text-label-md">Trade Log</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal/playbook">
+            <span class="material-symbols-outlined text-[20px]">menu_book</span>
+            <span class="font-label-md text-label-md">Playbook</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal/tags">
+            <span class="material-symbols-outlined text-[20px]">sell</span>
+            <span class="font-label-md text-label-md">Tags</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/journal/notes">
+            <span class="material-symbols-outlined text-[20px]">edit_note</span>
+            <span class="font-label-md text-label-md">Notes</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/calendar">
+            <span class="material-symbols-outlined text-[20px]">event</span>
+            <span class="font-label-md text-label-md">Economic Calendar</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/sizer">
+            <span class="material-symbols-outlined text-[20px]">calculate</span>
+            <span class="font-label-md text-label-md">Position Sizer</span>
+        </a>
+        <a class="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="/roadmap">
+            <span class="material-symbols-outlined text-[20px]">show_chart</span>
+            <span class="font-label-md text-label-md">Growth Roadmap</span>
+        </a>
+    </div>
+
+    <div class="px-4 mt-8 space-y-4">
+        <div class="space-y-1 border-t border-white/10 pt-4">
+            <a class="flex items-center space-x-3 px-4 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined text-[20px]">settings</span>
+                <span class="font-label-sm text-label-sm">Settings</span>
+            </a>
+            <a class="flex items-center space-x-3 px-4 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-white/5 transition-colors duration-200" href="#">
+                <span class="material-symbols-outlined text-[20px]">help_outline</span>
+                <span class="font-label-sm text-label-sm">Support</span>
+            </a>
+        </div>
+        <div class="flex items-center px-4 pt-2">
+            <img alt="Trader Profile" class="w-8 h-8 rounded-full object-cover border border-outline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVbQBfFwswRiJniEniOQwoHdxNwmajU_8uglW8u3zooi8hVT27CG_Oy54VEWrmdNIbgfckycmJ0PHsYtMa8v-jrgR14SBYF2-ut_0Q3dx299SQnG6DwwFbrUGz915AIGYqlmMdkC-QDIOS4XGS5CHA2bLMXYXrol0HdXvsDpoKO4kvh8q-JfPXklDhe8e0BHUpW1Trxr5gT5dbJzUF6IR0CDcsJo7eKx0OJgtWT3lUOg57u1wLgGVdpsS6yDanGwZa7rxWBnt1uXnI"/>
+            <div class="ml-3">
+                <p class="font-label-sm text-label-sm text-on-surface">Alex Mercer</p>
+                <p class="font-label-sm text-label-sm text-on-surface-variant text-[10px]">Prop Firm Funded</p>
+            </div>
+        </div>
+    </div>
+</aside>
+
+    <main class="flex-1 flex flex-col min-h-screen">
+        <header class="h-16 w-full z-40 bg-surface-dim/90 backdrop-blur-md border-b border-white/10 shadow-sm sticky top-0 flex items-center px-8">
+            <h2 class="font-headline-md text-headline-md font-semibold">Trade Log</h2>
+            <div class="ml-auto flex items-center gap-4">
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+                    <input class="bg-surface-container border-none rounded-full py-1.5 pl-9 pr-4 text-label-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary w-48 transition-all inner-glow" placeholder="Search logs..." type="text"/>
+                </div>
+            </div>
+        </header>
+        
+        <div class="p-8 w-full mx-auto flex-1 flex flex-col gap-6">
+            <div class="glass-panel rounded-xl flex-1 overflow-hidden flex flex-col">
+                <div class="p-4 border-b border-white/5 flex gap-4 text-label-sm font-label-sm">
+                    <button class="bg-white/5 px-4 py-1.5 rounded hover:bg-white/10 transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[16px]">filter_list</span> Filter
+                    </button>
+                    <button class="bg-white/5 px-4 py-1.5 rounded hover:bg-white/10 transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[16px]">download</span> Export CSV
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-white/5 bg-surface-container-low/50">
+                                <th class="py-3 px-4 font-label-sm text-label-sm text-outline font-medium">Ticket</th>
+                                <th class="py-3 px-4 font-label-sm text-label-sm text-outline font-medium">Date/Time</th>
+                                <th class="py-3 px-4 font-label-sm text-label-sm text-outline font-medium">Asset</th>
+                                <th class="py-3 px-4 font-label-sm text-label-sm text-outline font-medium">Setup</th>
+                                <th class="py-3 px-4 font-label-sm text-label-sm text-outline font-medium">Result</th>
+                                <th class="py-3 px-4 font-label-sm text-label-sm text-outline font-medium text-right">PnL</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trades-table-body" class="font-label-md text-label-md divide-y divide-white/5">
+                            <tr class="table-row-hover cursor-pointer transition-colors">
+                                <td class="py-3 px-4 text-on-surface-variant">#1024</td>
+                                <td class="py-3 px-4 text-on-surface-variant whitespace-nowrap">Oct 24, 2023 09:15 AM</td>
+                                <td class="py-3 px-4 font-bold text-on-surface">EURUSD</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider bg-surface-container border border-outline/30 text-on-surface-variant">CHoCH</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-1.5 text-secondary">
+                                        <span class="material-symbols-outlined text-[14px]">arrow_upward</span> WIN
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-right text-secondary">+$1,200.00</td>
+                            </tr>
+                            <tr class="table-row-hover cursor-pointer transition-colors">
+                                <td class="py-3 px-4 text-on-surface-variant">#1023</td>
+                                <td class="py-3 px-4 text-on-surface-variant whitespace-nowrap">Oct 23, 2023 10:30 AM</td>
+                                <td class="py-3 px-4 font-bold text-on-surface">GBPUSD</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider bg-surface-container border border-outline/30 text-on-surface-variant">FVG</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-1.5 text-error">
+                                        <span class="material-symbols-outlined text-[14px]">arrow_downward</span> LOSS
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-right text-error">-$450.00</td>
+                            </tr>
+                            <tr class="table-row-hover cursor-pointer transition-colors">
+                                <td class="py-3 px-4 text-on-surface-variant">#1022</td>
+                                <td class="py-3 px-4 text-on-surface-variant whitespace-nowrap">Oct 22, 2023 14:00 PM</td>
+                                <td class="py-3 px-4 font-bold text-on-surface">XAUUSD</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider bg-surface-container border border-outline/30 text-on-surface-variant">OB</span>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-1.5 text-outline">
+                                        <span class="material-symbols-outlined text-[14px]">horizontal_rule</span> BE
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-right text-outline">$0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
